@@ -1,0 +1,71 @@
+<!DOCTYPE html5>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orbitals</title>
+
+    <script src="orbitals/legendre.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gl-matrix/2.8.1/gl-matrix-min.js"
+      integrity="sha512-zhHQR0/H5SEBL3Wn6yYSaTTZej12z0hVZKOv3TwCUXT1z5qeqGcXJLLrbERYRScEDDpYIJhPC1fk31gqR783iQ=="
+      crossorigin="anonymous" defer>
+    </script>
+    <script src="orbitals/rendering.js" defer></script>
+
+    <style>
+        #screen
+        {
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+    <div style="float: left; margin-right: 50px;">
+        <canvas id="screen" width="500" height="500"></canvas>
+    </div>
+
+    <h1>What is this?</h1>
+
+    <p>
+        This little WebGL script visualizes the <a href="https://www.wikiwand.com/en/Spherical_harmonics">Spherical Harmonics</a>.
+        A quick rundown about what that means:
+    </p>
+    <p>
+        The <i>Spherical Harmonics</i> are results of a rather complex (pun not intended) function, commonly denoted with the capital letter Y.
+        This function depends on two parameters: <i>l</i> and <i>m</i>. Y is defined for all <b>integers</b> <i>l</i> and <i>m</i> such that 0 &le; <i>m</i> &le; <i>l</i>.
+        The function takes in two variables: &theta; and &phi;. The function essentially takes in a sphere and deforms it in a specific way.
+    </p>
+    <p>
+        This tool plots this function. Since the results of the function are complex, it isn't really easy to plot the function in all its glory.
+        (The function takes in two variables and spits out another two. We'd need 4D screens to see it in all its glory). 
+        So this widget just plots the radius of the complex number. Think of complex numbers as points in 2D space. I plot the distance
+        of that point from the origin.
+    </p>
+    <br>
+    <br>
+    <table>
+        <tr>
+            <td>Point distance</td>
+            <td>--</td>
+            <td><input type="range" min="0.01" max="0.1" step="0.005" value="0.05" id="stepSize" /></td>
+            <td id="lstepSize"></td>
+        </tr>
+    
+        <tr>
+            <td>l</td>
+            <td>--</td>
+            <td><input type="range" min="0" max="10" step="1" value="2" id="l" /></td>
+            <td id="ll"></td>
+        </tr>
+
+        <tr>
+            <td>m</td>
+            <td>--</td>
+            <td><input type="range" min="-10" max="10" step="1" value="0" id="m" /></td>
+            <td id="lm"></td>
+        </tr>
+
+        <tr><td><button onclick="createModel()">Create</button></td></tr>
+    </table>
+</body>
+</html>
