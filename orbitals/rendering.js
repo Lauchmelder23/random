@@ -46,7 +46,9 @@ function createModel()
     {
         for(var phi = -Math.PI; phi <= Math.PI; phi += stepSize)
         {
-            var length = Math.abs(Y(l, m, theta, phi));
+            var length = Y(l, m, theta, phi);
+            var sign = Math.abs(length) / length;
+            length *= sign;
     
             var x = length * Math.sin(theta) * Math.cos(phi);
             var y = length * Math.sin(theta) * Math.sin(phi);
@@ -55,6 +57,10 @@ function createModel()
             vertices.push(x);
             vertices.push(y);
             vertices.push(z);
+
+            vertices.push((sign >= 0) ? 0.0 : 1.0);
+            vertices.push((sign >= 0) ? 1.0 : 0.0);
+            vertices.push(0.0);
         }
     }
 
@@ -70,34 +76,45 @@ createModel();
 
 var vertCode =
             'attribute vec3 coordinates;' + 
+            'attribute vec3 color;' +
             'uniform mat4 uModelMatrix;' + 
             'uniform mat4 uModelViewMatrix;' + 
             'uniform mat4 uProjectionMatrix;' +
+            'varying vec3 fColor;' +
             'void main(void) {' + 
                 ' gl_Position = uProjectionMatrix * uModelViewMatrix * uModelMatrix * vec4(coordinates, 1.0);' + 
                 ' gl_PointSize = 1.0;' +
+                ' fColor = color;' +
             '}';
             
 var vertShader = gl.createShader(gl.VERTEX_SHADER);
 gl.shaderSource(vertShader, vertCode);
 gl.compileShader(vertShader);
+var error = gl.getShaderInfoLog(vertShader);
+console.log(error);
 
 var fragCode = 
-    'void main(void) {' + 'gl_FragColor = vec4(0.2, 0.9, 0.2, 1.0);' + '}';
+    'varying mediump vec3 fColor; ' +
+    'void main(void) {' + 'gl_FragColor = vec4(fColor, 1.0);' + '}';
 var fragShader = gl.createShader(gl.FRAGMENT_SHADER);
 gl.shaderSource(fragShader, fragCode);
 gl.compileShader(fragShader);
+error = gl.getShaderInfoLog(fragShader);
+console.log(error);
 
 var shaderProgram = gl.createProgram();
 gl.attachShader(shaderProgram, vertShader); 
 gl.attachShader(shaderProgram, fragShader);
 gl.linkProgram(shaderProgram);
+error = gl.getProgramInfoLog(shaderProgram);
+console.log(error);
 
 var modelMat = mat4.create()
 mat4.rotate(modelMat, modelMat, Math.PI / 2, [1.0, 0.0, 0]);
 
 var viewMat = mat4.create();
 mat4.translate(viewMat, viewMat, [0.0, 0.0, -3.0]);
+
 
 function drawScene()
 {
@@ -124,11 +141,15 @@ function drawScene()
     gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uModelMatrix"), false, modelMat);
     gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uModelViewMatrix"), false, viewMat);
     gl.uniformMatrix4fv(gl.getUniformLocation(shaderProgram, "uProjectionMatrix"), false, projMat);
-    
+
     var coord = gl.getAttribLocation(shaderProgram, "coordinates");
-    
-    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
+    var color = gl.getAttribLocation(shaderProgram, "color")
+
+    gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 6 * 4, 0);
     gl.enableVertexAttribArray(coord);
+
+    gl.vertexAttribPointer(color, 3, gl.FLOAT, false, 6 * 4, 3 * 4);
+    gl.enableVertexAttribArray(color);
     
     gl.viewport(0,0, gl.canvas.width, gl.canvas.height);
     gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
