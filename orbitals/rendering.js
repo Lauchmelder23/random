@@ -24,9 +24,8 @@ function HSVtoRGB(h, s, v) {
 }
 
 var canvas = document.querySelector('#screen');
-canvas.height = screen.height - 200;
-canvas.width = canvas.height;
-console.log(window.height)
+canvas.height = canvas.clientHeight;
+    canvas.width = canvas.clientHeight;
 var gl = canvas.getContext("webgl");
 
 var VBO = gl.createBuffer();
@@ -131,7 +130,7 @@ function drawScene()
     gl.vertexAttribPointer(coord, 3, gl.FLOAT, false, 0, 0);
     gl.enableVertexAttribArray(coord);
     
-    gl.viewport(0,0,canvas.width,canvas.height);
+    gl.viewport(0,0, gl.canvas.width, gl.canvas.height);
     gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
 }
 
