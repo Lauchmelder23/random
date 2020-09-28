@@ -152,7 +152,7 @@ function drawScene()
     gl.enableVertexAttribArray(color);
     
     gl.viewport(0,0, gl.canvas.width, gl.canvas.height);
-    gl.drawArrays(gl.POINTS, 0, vertices.length / 3);
+    gl.drawArrays(gl.POINTS, 0, vertices.length / 6);
 }
 
 var then = 0;
