@@ -63,6 +63,72 @@
             height: 95vh;
             width: 95vh;
         }
+        
+        table 
+        {
+            padding-right: 3em;
+            border-right: 2px solid rgb(200, 200, 200);
+            height: 100px;
+        }
+
+        #controls {
+            display: inline-flex;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            margin-left: 3em;
+            margin-right: 10px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        input:checked + .slider {
+            background-color: #2196F3;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px #2196F3;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -93,29 +159,37 @@
     </p>
     <br>
     <br>
-    <table>
-        <tr>
-            <td>Point distance</td>
-            <td>--</td>
-            <td><input type="range" min="0.01" max="0.1" step="0.005" value="0.05" id="stepSize" /></td>
-            <td id="lstepSize"></td>
-        </tr>
-    
-        <tr>
-            <td><i>l</i></td>
-            <td>--</td>
-            <td><input type="range" min="0" max="10" step="1" value="2" id="l" /></td>
-            <td id="ll"></td>
-        </tr>
+    <div id="controls">
+        <table>
+            <tr>
+                <td>Point distance</td>
+                <td>--</td>
+                <td><input type="range" min="0.01" max="0.1" step="0.005" value="0.05" id="stepSize" /></td>
+                <td id="lstepSize"></td>
+            </tr>
+        
+            <tr>
+                <td><i>l</i></td>
+                <td>--</td>
+                <td><input type="range" min="0" max="10" step="1" value="2" id="l" /></td>
+                <td id="ll"></td>
+            </tr>
 
-        <tr>
-            <td><i>m</i></td>
-            <td>--</td>
-            <td><input type="range" min="-10" max="10" step="1" value="0" id="m" /></td>
-            <td id="lm"></td>
-        </tr>
+            <tr>
+                <td><i>m</i></td>
+                <td>--</td>
+                <td><input type="range" min="-10" max="10" step="1" value="0" id="m" /></td>
+                <td id="lm"></td>
+            </tr>
 
-        <tr><td><button onclick="createModel()">Create</button></td></tr>
-    </table>
+            <tr><td><button onclick="createModel()">Create</button></td></tr>
+        </table>
+
+        <label class="switch">
+            <input type="checkbox" onchange="changeProjection(this)">
+            <span class="slider"></span>
+        </label>
+        Toggle orthographic projection
+    </div>
 </body>
 </html>

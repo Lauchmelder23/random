@@ -23,6 +23,13 @@ function HSVtoRGB(h, s, v) {
     };
 }
 
+var ortho = false;
+
+function changeProjection(e)
+{
+    ortho = !ortho;
+}
+
 var canvas = document.querySelector('#screen');
 canvas.height = canvas.clientHeight;
     canvas.width = canvas.clientHeight;
@@ -131,7 +138,10 @@ function drawScene()
     const zFar = 100.0;
 
     const projMat = mat4.create();
-    mat4.perspective(projMat, fov, aspect, zNear, zFar);
+    if(ortho)
+        mat4.ortho(projMat, -1.0, 1.0, -1.0, 1.0, zNear, zFar);
+    else
+        mat4.perspective(projMat, fov, aspect, zNear, zFar);
 
     mat4.rotate(viewMat, viewMat, 0.05, [0.0, 1.0, 0.0]);
 
